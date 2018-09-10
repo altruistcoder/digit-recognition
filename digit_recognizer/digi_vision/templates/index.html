@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="./css/styles.css">
+    </head>
+
+    <body>
+        <div class="navbar">
+            <h1>Snapper</h1>
+        </div>
+        <div class="top-container">
+            <video id="video">
+                Not available
+            </video>
+            <button id="photo-button" class="btn btn-dark">
+                Take Photo
+            </button>
+            <select id="photo-filter">
+                <option value="none">Normal</option>
+                <option value="grayscale(100%)">Grayscale</option>
+                <option value="sepia(100%)">Sepia</option>
+                <option value="invert(100%)">Invert</option>
+                <option value="hue-rotate(90deg)">Hue</option>
+                <option value="blur(10px)">Blur</option>
+                <option value="contrast(200%)">Contrast</option>
+            </select>
+            <button id="clear-button" class="btn btn-light">Clear</button>
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="bottom-container">
+            <div id="photos">
+
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+        <script>
+            let width = 500;
+            let height = 400;
+            let filter = 'none';
+            let streaming = false;
+
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const photos = document.getElementById('photos');
+            const photoButton = document.getElementById('photo-button');
+            const clearButton = document.getElementById('clear-button');
+            const photoFilter = document.getElementById('photo-filter');
+            canvas.width = width;
+            canvas.height = height;
+
+            navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+                .then((stream) => {
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch((err) => {
+                    alert("Permission Denied")
+                })
+
+
+            video.addEventListener('canplay', (e) => {
+                if (!streaming) {
+                    height = video.videoHeight / (video.videoWidth / width)
+
+                    video.setAttribute('width', width);
+                    video.setAttribute('height', height);
+                    canvas.setAttribute('width', width);
+                    canvas.setAttribute('height', height);
+                    streaming = true;
+                }
+            }, false);
+
+
+            photoButton.addEventListener(
+                'click',
+                function (e) {
+                    takePicture();
+                    e.preventDefault();
+                },
+                false
+            )
+
+            photoFilter.addEventListener('change', function (e) {
+                filter = e.target.value
+                video.style.filter = filter;
+                e.preventDefault()
+                console.log(e)
+            })
+            clearButton.addEventListener('click', function (e) {
+                photos.innerHTML = '';
+                filter = 'none';
+                video.style.filter = filter;
+                photoFilter.selectedIndex = 0;
+            })
+
+
+            function takePicture() {
+
+                ctx.drawImage(video, 0, 0, width, height);
+                let imgUrl = canvas.toDataURL('image/jpg');
+                // imgUrlJSON = JSON.stringify(imgUrl)
+                console.log(imgUrl);
+                // const img = document.createElement('img');
+                // img.setAttribute('src',imgUrl);
+                // img.style.filter = filter;
+                // photos.appendChild(img);
+                // setInterval(
+                //     () => {
+                //         $.post(
+                //             '/',
+                //             {
+                //                 abc: imgUrl
+                //             },
+                //             (res) => {
+                //                 console.log('Res', res)
+                //             }
+                //         )
+                //     },
+                //     1000
+                //
+                // );
+                $.post(
+                            '/',
+                            {
+                                abc: imgUrl
+                            },
+                            (res) => {
+                                console.log('Res', res)
+                            }
+                        )
+            }
+        </script>
+    </body>
+</html>
