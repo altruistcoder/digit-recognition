@@ -1,0 +1,16 @@
+{% extends 'digit_app/base.html' %}
+
+{%  block content %}
+{#    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>#}
+    <h1>{{ title }}</h1>
+    <br><br>
+
+    <form method="post" enctype="multipart/form-data"> {% csrf_token %}
+        <p>
+            <label for="id_numImg"> Upload your image here: </label>
+            <input type="file" name="numImg" class="form-control" accept="image/*" required id="id_numImg">
+        </p>
+        <input class="btn btn-primary" type='submit' value='Upload &raquo;'>
+    </form>
+
+{%  endblock content %}
