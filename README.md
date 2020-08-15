@@ -44,10 +44,10 @@ Digit Recognizer is a simple Django application which can be used to recognize h
 
 5. Now, navigate to the **src** directory (containing the **manage.py** file).
 
-7. Run following command:
+6. Run following command:
 
 ```
   python manage.py migrate
   python manage.py runserver
 ```
-8. Digit Recognizer is ready for use. You can run it at [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
+7. Digit Recognizer is ready for use. You can run it at [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
